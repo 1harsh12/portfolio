@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harsh Kumar Chaurasia - Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* === GLOBAL STYLES & THEMES === */
+        :root {
+            /* Default Theme: Minimal Professional */
+            --background: #141414;
+            --foreground: #e0e0e0;
+            --prompt: #a0a0a0;
+            --command: #ffffff;
+            --output: #4CAF50;
+            --link: #2196F3;
+            --error: #f44336;
+            --info: #00bcd4;
+            --header: #ffffff;
+            --separator: #333;
+            --scrollbar-bg: #1f1f1f;
+            --scrollbar-thumb: #444;
+        }
+        body[data-theme="cyber"] {
+            --background: #0d0f18;
+            --background-radial: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            --foreground: #dbe0e5;
+            --prompt: #00e0e0;
+            --command: #f2f2f2; --output: #34d399;
+            --link: #35a5ff; --error: #ff6b81; --info: #f075b6; --header: #f075b6;
+            --separator: #00e0e030;
+            --scrollbar-bg: #1a202c; --scrollbar-thumb: #2d3748;
+        }
+        body[data-theme="matrix"] {
+            --background: #000; --foreground: #0f0; --prompt: #0f0; --command: #fff;
+            --output: #0f0; --link: #35a5ff; --error: #ff4d4d; --info: #0f0; --header: #0f0;
+            --separator: #0f05; text-shadow: 0 0 2px var(--foreground);
+        }
+        body[data-theme="dracula"] {
+            --background: #282a36; --foreground: #f8f8f2; --prompt: #50fa7b; --command: #f8f8f2;
+            --output: #bd93f9; --link: #8be9fd; --error: #ff5555; --info: #8be9fd; --header: #ffb86c;
+            --separator: #44475a;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.1em;
+            line-height: 1.6;
+            background: var(--background-radial, var(--background));
+            color: var(--foreground);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* === FIXED LAYOUT === */
+        #terminal {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            cursor: text;
+        }
+        #output {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        #input-line-container {
+            flex-shrink: 0;
+            padding: 0.75rem 2rem;
+            border-top: 1px solid var(--separator);
+            background: var(--background);
+        }
+
+        /* === INPUT STYLES === */
+        #input-line { display: flex; align-items: center; flex-wrap: nowrap; }
+        .prompt { color: var(--prompt); margin-right: 8px; white-space: nowrap; }
+        .input-area { display: flex; align-items: center; flex-grow: 1; }
+        #command-input {
+            background: transparent; border: none; color: var(--command); font-family: inherit;
+            font-size: inherit; flex-grow: 1; outline: none; padding: 0;
+        }
+
+        /* === CURSOR & ANIMATION === */
+        #cursor { background-color: var(--command); width: 0.6em; height: 1.2em; display: inline-block; vertical-align: middle; animation: blink 1s steps(2, start) infinite; }
+        @keyframes blink { to { visibility: hidden; } }
+        #command-input:focus + #cursor { animation: none; }
+
+        /* === OUTPUT & TEXT STYLES (ANIMATED) === */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .output-line {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease-out;
+            margin-bottom: 2px;
+        }
+        .command-echo { color: var(--command); }
+        .error { color: var(--error); }
+        .success { color: var(--output); }
+        .info { color: var(--info); }
+        b, .header { font-weight: bold; color: var(--header); }
+        a { color: var(--link); text-decoration: none; transition: all 0.2s; }
+        a:hover, a:focus { text-decoration: underline; filter: brightness(1.2); }
+        pre { font-family: 'Roboto Mono', monospace; margin: 0; }
+        ul { list-style-type: none; padding-left: 0; }
+        li { padding-left: 20px; position: relative; }
+        li::before { content: '>'; position: absolute; left: 0; color: var(--prompt); }
+
+        /* === TABLE & GRID LAYOUTS === */
+        .output-table { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
+        .table-row { display: flex; gap: 20px; }
+        .table-col-1 { color: var(--info); flex-shrink: 0; width: 220px; }
+        
+        .neofetch-container { display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start; }
+        .neofetch-logo { white-space: pre; color: var(--prompt); line-height: 1.2; }
+        .neofetch-info { display: grid; grid-template-columns: auto 1fr; gap: 5px 15px; align-content: start; }
+        .nf-key { font-weight: bold; color: var(--info); text-align: right; }
+
+        /* === SCROLLBAR & RESPONSIVENESS === */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--scrollbar-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        @media (max-width: 768px) {
+            body { font-size: 1em; }
+            #output { padding: 1.5rem; }
+            #input-line-container { padding: 0.75rem 1.5rem; }
+            .table-row { flex-direction: column; gap: 0; margin-bottom: 10px; }
+            .table-col-1 { width: auto; }
+            .neofetch-container { flex-direction: column; }
+        }
+    </style>
+</head>
+<body data-theme="">
+    <div id="terminal">
+        <div id="output" role="log" aria-live="polite"></div>
+        <div id="input-line-container">
+            <div id="input-line">
+                <span class="prompt" id="prompt-text"></span>
+                <div class="input-area">
+                    <input type="text" id="command-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" autofocus aria-label="Command input">
+                    <span id="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (() => {
+        // =================================================================== //
+        // ==================== YOUR DETAILS CONFIGURATION =================== //
+        // =================================================================== //
+        const CONFIG = {
+            USERNAME: "harsh",
+            HOSTNAME: "portfolio.dev",
+            CLEAR_REPRINTS_BANNER: true,
+            RESUME_URL: "https://example.com/resume.pdf",
+            GUI_URL: "https://github.com/harsh-chaurasia",
+            // --- MODIFIED EXIT URL ---
+            EXIT_URL: "index.html",
+        };
+
+        const THEMES = ['default', 'cyber', 'matrix', 'dracula', 'solarized', 'nord', 'monokai'];
+
+        const USER_DATA = {
+            name: "Harsh Kumar Chaurasia",
+            title: "Full-Stack Developer",
+            
+            about: `Hello! I'm Harsh Kumar Chaurasia.\nA passionate and detail-oriented Full-Stack Developer with a love for building efficient and scalable web applications. \nI thrive on solving complex problems and enjoy turning ideas into reality through code.\nMy journey in tech is driven by a constant desire to learn and adapt to new technologies.`,
+
+            skills: `
+<div class="output-table">
+    <div class="table-row"><div class="table-col-1">Languages</div><div class="table-col-2">JavaScript (ES6+), TypeScript, Python, HTML5, CSS3</div></div>
+    <div class="table-row"><div class="table-col-1">Frontend</div><div class="table-col-2">React, Next.js, Redux, Svelte, Tailwind CSS, Material-UI</div></div>
+    <div class="table-row"><div class="table-col-1">Backend</div><div class="table-col-2">Node.js, Express.js, Django, REST APIs, GraphQL</div></div>
+    <div class="table-row"><div class="table-col-1">Databases</div><div class="table-col-2">MongoDB, PostgreSQL, MySQL, Redis</div></div>
+    <div class="table-row"><div class="table-col-1">DevOps</div><div class="table-col-2">Docker, Git, GitHub Actions, Vercel, AWS (EC2, S3)</div></div>
+</div>`,
+
+            projectsHeader: "Here are some of my key projects. Type `cat <project_name>` to see details.",
+            projects: [
+                { name: "portfolio-terminal", description: "This interactive terminal portfolio website." },
+                { name: "kodovers-api", description: "A robust E-commerce API backend built with Node.js and Express." },
+            ],
+            
+            projectDetails: {
+                'portfolio-terminal': `
+<b class="header">Project:</b> Terminal Portfolio Website
+<b>Description:</b> A personal portfolio designed to look and feel like a command-line interface. Built with vanilla HTML, CSS, and JavaScript, the goal was to create a unique and interactive user experience for visitors.
+<b>Technologies:</b> HTML5, CSS3, JavaScript (ES6)
+<b>Source Code:</b> <a href="https://github.com/harsh-chaurasia/portfolio-terminal" target="_blank">github.com/harsh-chaurasia/portfolio-terminal</a>
+                `,
+                'kodovers-api': `
+<b class="header">Project:</b> Kodovers E-commerce API
+<b>Description:</b> A full-featured backend API for an e-commerce platform. It handles user authentication, product management, order processing, and payment integration. Designed to be scalable and secure.
+<b>Technologies:</b> Node.js, Express, MongoDB, JWT, Stripe API
+<b>Source Code:</b> <a href="https://github.com/harsh-chaurasia/e-commerce-api" target="_blank">github.com/harsh-chaurasia/e-commerce-api</a>
+                `
+            },
+            
+            contact: `You can reach me here:
+<ul>
+    <li><b>Email</b>     <a href="mailto:hkumarchaurasia@gmail.com">hkumarchaurasia@gmail.com</a></li>
+    <li><b>LinkedIn</b>  <a href="https://linkedin.com/in/harsh-kumar-chaurasia" target="_blank">linkedin.com/in/harsh-kumar-chaurasia</a></li>
+    <li><b>GitHub</b>    <a href="https://github.com/harsh-chaurasia" target="_blank">github.com/harsh-chaurasia</a></li>
+</ul>`,
+
+            repo: "https://github.com/harsh-chaurasia/portfolio-terminal",
+
+            neofetch: {
+                art: `
+             ,----------------,              ,---------,
+        ,-----------------------,          ,"        ,"|
+      ,"                      ,"|        ,"        ,"  |
+     +-----------------------+  |      ,"        ,"    |
+     |  .-----------------.  |  |     +---------+      |
+     |  |                 |  |  |     | -==----'|      |
+     |  |                 |  |  |     |         |      |
+     |  |                 |  |  |/----|'---=    |      |
+     |  |                 |  |  |   ,/|==== ooo |      ;
+     |  |                 |  |  |  // |(((( [33]|    ,"
+     |  '-----------------'  |," .;'| |((((     |  ,"
+     +-----------------------+  ;;  | |         |,"     
+        /_)______________(_/  //'   | +---------+
+   ___________________________/___  \\
+  /  oooooooooooooooo  .o.  oooo /,   \\,"------------
+ / ==ooooooooooooooo==.o.  ooo= //   ,\\\`\\\--{)B ,"
+/_==__==========__==_ooo__ooo=_/'   /____________,"
+\`-----------------------------'`,
+                info: () => [
+                    { key: "Name", value: USER_DATA.name },
+                    { key: "Title", value: USER_DATA.title },
+                    { key: "OS", value: "Web Browser" },
+                    { key: "Host", value: window.location.hostname },
+                    { key: "Theme", value: `${document.body.dataset.theme || 'default'}`},
+                    { key: "Email", value: `<a href="mailto:hkumarchaurasia@gmail.com">hkumarchaurasia@gmail.com</a>` },
+                    { key: "GitHub", value: `<a href="https://github.com/harsh-chaurasia" target="_blank">harsh-chaurasia</a>` }
+                ]
+            },
+            
+            banner: `<pre>
+ _   _                _       _  __                             ____ _                               _       
+| | | | __ _ _ __ ___| |__   | |/ /   _ _ __ ___   __ _ _ __   / ___| |__   __ _ _   _ _ __ __ _ ___(_) __ _ 
+| |_| |/ _\` | '__/ __| '_ \\  | ' / | | | '_ \` _ \\ / _\` | '__| | |   | '_ \\ / _\` | | | | '__/ _\` / __| |/ _\` |
+|  _  | (_| | |  \\__ \\ | | | | . \\ |_| | | | | | | (_| | |    | |___| | | | (_| | |_| | | | (_| \\__ \\ | (_| |
+|_| |_|\\__,_|_|  |___/_| |_| |_|\\_\\__,_|_| |_| |_|\\__,_|_|     \\____|_| |_|\\__,_|\\__,_|_|  \\__,_|___/_|\\__,_|
+</pre>
+<span class="success">Welcome to my interactive portfolio!</span>`
+        };
+
+        // =================================================================== //
+        // ============== CORE TERMINAL LOGIC (IMPROVED) ===================== //
+        // =================================================================== //
+        
+        const terminal = document.getElementById('terminal');
+        const output = document.getElementById('output');
+        const commandInput = document.getElementById('command-input');
+        const promptElement = document.getElementById('prompt-text');
+
+        let commandHistory = [];
+        let historyIndex = -1;
+        let tabCompletionIndex = -1;
+        let isTyping = false;
+        
+        const commands = {
+            help: () => `
+<div class="output-table">
+    <div class="table-row"><div class="table-col-1"><a data-command="help">help</a></div><div class="table-col-2">Show this help message.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="about">about</a></div><div class="table-col-2">Display my professional summary.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="skills">skills</a></div><div class="table-col-2">List my technical skills.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="projects">projects</a> (or ls)</div><div class="table-col-2">View my projects.</div></div>
+    <div class="table-row"><div class="table-col-1">cat <project></div><div class="table-col-2">Show details about a specific project.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="contact">contact</a> (or socials)</div><div class="table-col-2">Show contact information.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="neofetch">neofetch</a></div><div class="table-col-2">Display a system summary.</div></div>
+    <div class="table-row"><div class="table-col-1">echo [text]</div><div class="table-col-2">Prints text back to the terminal.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="theme">theme</a> <name></div><div class="table-col-2">Change terminal theme. Try <a data-command="theme cyber">cyber</a>!</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="gui">gui</a></div><div class="table-col-2">Open my GitHub profile.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="history">history</a></div><div class="table-col-2">Show command history.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="repo">repo</a></div><div class="table-col-2">Open the source code for this portfolio.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="resume">resume</a></div><div class="table-col-2">Open my resume in a new tab.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="date">date</a></div><div class="table-col-2">Display the current date and time.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="banner">banner</a></div><div class="table-col-2">Display the welcome banner.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="clear">clear</a></div><div class="table-col-2">Clear the terminal screen.</div></div>
+    <div class="table-row"><div class="table-col-1"><a data-command="exit">exit</a></div><div class="table-col-2">Exit to main portfolio site.</div></div>
+</div>`,
+            whoami: () => CONFIG.USERNAME,
+            about: () => USER_DATA.about,
+            skills: () => USER_DATA.skills,
+            contact: () => USER_DATA.contact,
+            socials: () => commands.contact(),
+            banner: () => USER_DATA.banner,
+            echo: (args) => args.join(' '),
+            neofetch: () => {
+                const infoHtml = USER_DATA.neofetch.info().map(item => `<div class="nf-key">${item.key}:</div><div>${item.value}</div>`).join('');
+                return `<div class="neofetch-container"><div class="neofetch-logo">${USER_DATA.neofetch.art}</div><div class="neofetch-info">${infoHtml}</div></div>`;
+            },
+            projects: () => {
+                let projectList = `<div class="output-table">`;
+                USER_DATA.projects.forEach(p => {
+                    projectList += `<div class="table-row"><div class="table-col-1"><a data-command="cat ${p.name}">${p.name}</a></div><div class="table-col-2">${p.description}</div></div>`;
+                });
+                projectList += `</div>`;
+                return `${USER_DATA.projectsHeader}<br>${projectList}`;
+            },
+            ls: () => commands.projects(),
+            sudo: () => `<span class="error">User is not in the sudoers file. This incident will be reported.</span>`,
+            date: () => new Date().toString(),
+            history: () => `<ul>${commandHistory.slice(0).reverse().map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ul>`,
+            repo: () => {
+                printOutput(`Opening repository: <a href="${USER_DATA.repo}" target="_blank">${USER_DATA.repo}</a>...`);
+                window.open(USER_DATA.repo, "_blank");
+                return ""; 
+            },
+            resume: () => {
+                if (!CONFIG.RESUME_URL || CONFIG.RESUME_URL === "https://example.com/resume.pdf") {
+                     return `<span class="error">Resume URL not configured. Please contact the site owner.</span>`;
+                }
+                printOutput(`Opening resume: <a href="${CONFIG.RESUME_URL}" target="_blank">${CONFIG.RESUME_URL}</a>...`);
+                window.open(CONFIG.RESUME_URL, "_blank");
+                return "";
+            },
+            clear: () => {
+                output.innerHTML = '';
+                if (CONFIG.CLEAR_REPRINTS_BANNER) printOutput(USER_DATA.banner);
+                return "";
+            },
+            theme: (args) => {
+                const themeName = args[0] || '';
+                if (!themeName) {
+                    return `Usage: theme <name>\nAvailable themes: ${THEMES.map(t => `<a data-command="theme ${t}">${t}</a>`).join(', ')}`;
+                }
+                if (THEMES.includes(themeName)) {
+                    document.body.dataset.theme = themeName === 'default' ? '' : themeName;
+                    localStorage.setItem('terminalTheme', themeName);
+                    return `<span class="success">Theme set to ${themeName}.</span>`;
+                }
+                return `<span class="error">Error: Theme '${themeName}' not found.</span>`;
+            },
+            cat: (args) => {
+                const projectName = args[0];
+                if (!projectName) return `Usage: cat <project_name>`;
+                if (USER_DATA.projectDetails[projectName]) return USER_DATA.projectDetails[projectName];
+                return `<span class="error">Error: project '${projectName}' not found. Use 'projects' to see the list.</span>`;
+            },
+            gui: () => {
+                printOutput("<span class='info'>Opening GitHub profile...</span>");
+                window.open(CONFIG.GUI_URL, "_blank");
+                return "";
+            },
+            // --- MODIFIED EXIT COMMAND ---
+            exit: () => {
+                printOutput(`<span class="info">Redirecting to main portfolio... Goodbye!</span>`);
+                setTimeout(() => { window.location.href = CONFIG.EXIT_URL; }, 800);
+                return "";
+            }
+        };
+
+        const setPrompt = () => {
+            promptElement.innerHTML = `<span style="color:var(--info)">${CONFIG.USERNAME}</span><span style="color:var(--foreground)">@</span><span style="color:var(--prompt)">${CONFIG.HOSTNAME}</span><span style="color:var(--foreground)">:~$</span>`;
+        };
+
+        const printOutput = (htmlContent) => {
+            if (htmlContent === undefined || htmlContent === null) return;
+            const div = document.createElement('div');
+            div.className = 'output-line';
+            div.innerHTML = htmlContent;
+            output.appendChild(div);
+            scrollToBottom();
+        };
+        
+        const echoCommand = (command) => {
+            const div = document.createElement('div');
+            div.className = 'output-line'
+            div.innerHTML = `<div style="display:flex;"><span class="prompt">${promptElement.innerHTML}</span><span class="command-echo">${escapeHtml(command)}</span></div>`;
+            output.appendChild(div);
+        };
+
+        const handleCommand = (commandStr) => {
+            if (isTyping) return;
+            const commandTrimmed = commandStr.trim();
+            if (commandTrimmed) {
+                echoCommand(commandTrimmed);
+                if (commandHistory[0] !== commandTrimmed) {
+                    commandHistory.unshift(commandTrimmed);
+                }
+            }
+            historyIndex = -1;
+            tabCompletionIndex = -1;
+            
+            const [cmd, ...args] = commandTrimmed.toLowerCase().split(' ').filter(Boolean);
+
+            if (cmd) {
+                const handler = commands[cmd];
+                if (handler) {
+                    const result = handler(args);
+                    printOutput(result);
+                } else {
+                    const suggestion = findClosestCommand(cmd);
+                    let errorMsg = `Command not found: <span class="error">${escapeHtml(cmd)}</span>.`;
+                    if (suggestion) {
+                        errorMsg += ` Did you mean <a data-command="${suggestion}">${suggestion}</a>?`;
+                    }
+                    errorMsg += ` Type 'help' for a list of commands.`
+                    printOutput(errorMsg);
+                }
+            }
+            commandInput.value = '';
+            scrollToBottom();
+        };
+        
+        const handleTabCompletion = () => {
+            const inputParts = commandInput.value.split(' ');
+            const currentPart = inputParts[inputParts.length - 1].toLowerCase();
+            let suggestions = [];
+
+            if (inputParts.length === 1) { // Command completion
+                suggestions = Object.keys(commands).filter(c => c.startsWith(currentPart));
+            } else { // Argument completion
+                const command = inputParts[0].toLowerCase();
+                if (command === 'cat') {
+                    suggestions = USER_DATA.projects.map(p => p.name).filter(n => n.toLowerCase().startsWith(currentPart));
+                } else if (command === 'theme') {
+                    suggestions = THEMES.filter(t => t.startsWith(currentPart));
+                }
+            }
+            
+            if (suggestions.length === 0) return;
+            if (suggestions.length === 1) {
+                inputParts[inputParts.length - 1] = suggestions[0];
+                commandInput.value = inputParts.join(' ') + ' ';
+            } else {
+                tabCompletionIndex = (tabCompletionIndex + 1) % suggestions.length;
+                inputParts[inputParts.length - 1] = suggestions[tabCompletionIndex];
+                commandInput.value = inputParts.join(' ');
+            }
+        };
+
+        const levenshtein = (a, b) => {
+            const matrix = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
+            for (let i = 0; i <= a.length; i += 1) { matrix[0][i] = i; }
+            for (let j = 0; j <= b.length; j += 1) { matrix[j][0] = j; }
+            for (let j = 1; j <= b.length; j += 1) {
+                for (let i = 1; i <= a.length; i += 1) {
+                    const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
+                    matrix[j][i] = Math.min(
+                        matrix[j][i - 1] + 1,
+                        matrix[j - 1][i] + 1,
+                        matrix[j - 1][i - 1] + indicator,
+                    );
+                }
+            }
+            return matrix[b.length][a.length];
+        };
+
+        const findClosestCommand = (cmd) => {
+            let closestCmd = null;
+            let minDistance = 3;
+            for (const key of Object.keys(commands)) {
+                const distance = levenshtein(cmd, key);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestCmd = key;
+                }
+            }
+            return closestCmd;
+        };
+        
+        const escapeHtml = (str) => {
+            const p = document.createElement("p");
+            p.textContent = str;
+            return p.innerHTML;
+        };
+
+        const scrollToBottom = () => { output.scrollTop = output.scrollHeight; };
+        
+        commandInput.addEventListener('keydown', (e) => {
+            if (isTyping) { e.preventDefault(); return; }
+            if (e.key !== 'Tab') tabCompletionIndex = -1;
+
+            switch (e.key) {
+                case 'Enter':
+                    e.preventDefault();
+                    handleCommand(commandInput.value);
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    if (historyIndex < commandHistory.length - 1) {
+                        historyIndex++;
+                        commandInput.value = commandHistory[historyIndex];
+                        commandInput.setSelectionRange(commandInput.value.length, commandInput.value.length);
+                    }
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    if (historyIndex > 0) {
+                        historyIndex--;
+                        commandInput.value = commandHistory[historyIndex];
+                    } else {
+                        historyIndex = -1;
+                        commandInput.value = '';
+                    }
+                    commandInput.setSelectionRange(commandInput.value.length, commandInput.value.length);
+                    break;
+                case 'Tab': e.preventDefault(); handleTabCompletion(); break;
+                case 'l': if (e.ctrlKey) { e.preventDefault(); commands.clear(); } break;
+            }
+        });
+        
+        terminal.addEventListener('click', (e) => {
+            const link = e.target.closest('a[data-command]');
+            if (link) {
+                e.preventDefault();
+                commandInput.value = link.dataset.command;
+                handleCommand(link.dataset.command);
+                return;
+            }
+            if (!isTyping) commandInput.focus();
+        });
+
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        
+        const bootSequence = async () => {
+            await sleep(200);
+            printOutput('Booting up H.K.C Portfolio OS v3.2...');
+            await sleep(500);
+            printOutput("Running system checks...");
+            await sleep(300);
+            printOutput("  <span class='success'>[✓]</span> Kernel Integrity");
+            await sleep(200);
+            printOutput("  <span class='success'>[✓]</span> Virtual DOM");
+            await sleep(300);
+            printOutput("  <span class='success'>[✓]</span> Async Routines");
+            await sleep(400);
+            printOutput("<span class='success'>All systems nominal.</span>\n");
+            await sleep(500);
+            printOutput(USER_DATA.banner);
+            printOutput(`<span class="info">Type 'help' to see the list of available commands.</span>`);
+        };
+        
+        const init = async () => {
+            const savedTheme = localStorage.getItem('terminalTheme') || 'default';
+            const inputContainer = document.getElementById('input-line-container');
+            document.body.dataset.theme = savedTheme === 'default' ? '' : savedTheme;
+            setPrompt();
+            
+            isTyping = true;
+            inputContainer.style.display = 'none';
+            await bootSequence();
+            inputContainer.style.display = 'block';
+            isTyping = false;
+            commandInput.focus();
+        };
+        
+        init();
+    })();
+    </script>
+</body>
+</html>

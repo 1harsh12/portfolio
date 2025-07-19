@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harsh Kumar Chaurasia | Developer Portfolio</title>
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Google Fonts: Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body>
+    
+    <div class="scanline-overlay"></div>
+
+    <!-- Mobile Hamburger Button -->
+    <button class="hamburger" aria-label="Open menu">
+        <div class="hamburger-box">
+            <div class="hamburger-inner"></div>
+        </div>
+    </button>
+    
+    <!-- Mobile Navigation Panel -->
+    <aside class="mobile-nav">
+         <ul>
+            <li><a href="#about">// About</a></li>
+            <li><a href="#projects">// Projects</a></li>
+            <li><a href="#contact">// Contact</a></li>
+        </ul>
+        <li><a href="terminal.html" class="nav-cta-button">[ Terminal ]</a></li>
+        <ul class="mobile-socials">
+            <li><a href="https://github.com/1harsh12" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a></li>
+            <li><a href="https://www.linkedin.com/in/1harsh12/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+            <li><a href="https://x.com/HKChaurasia0" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
+        </ul>
+    </aside>
+    
+    <!-- Left Sidebar: Socials -->
+    <aside class="left-sidebar animate-on-load" style="animation-delay: 800ms;">
+        <ul>
+            <li><a href="https://github.com/1harsh12" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a></li>
+            <li><a href="https://www.linkedin.com/in/1harsh12/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+            <li><a href="https://x.com/HKChaurasia0" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
+        </ul>
+    </aside>
+    
+    <!-- Right Sidebar: Email -->
+    <aside class="right-sidebar animate-on-load" style="animation-delay: 800ms;">
+        <a href="mailto:hkumarchaurasia@gmail.com">hkumarchaurasia@gmail.com</a>
+    </aside>
+
+
+    <!-- Top Navigation Bar -->
+    <nav class="animate-on-load" style="animation-delay: 100ms;">
+        <div class="logo">
+            <a href="#hero" aria-label="home">HKC>_</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#hero">// 00. Home</a></li>
+            <li><a href="#about">// 01. About</a></li>
+            <li><a href="#projects">// 02. Projects</a></li>
+            <li><a href="#contact">// 03. Contact</a></li>
+            <li><a href="terminal.html" class="nav-cta-button">[ Terminal ]</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <main>
+
+        <!-- Hero Section -->
+        <header id="hero">
+            <p class="hero-intro animate-on-load" style="animation-delay: 200ms;">// Welcome, I'm</p>
+            <h1 class="hero-name animate-on-load" style="animation-delay: 300ms;">Harsh Kumar Chaurasia.</h1>
+            <h2 class="hero-tagline animate-on-load" style="animation-delay: 400ms;">I build things for the web.</h2>
+            <p class="hero-description animate-on-load" style="animation-delay: 500ms;">
+                I'm a full-stack developer specializing in creating exceptional, high-performance digital experiences.
+                My current focus is building accessible and user-centric products.
+            </p>
+            <p class="hero-cli animate-on-load" style="animation-delay: 600ms;">$ <span id="typing-text"></span></p>
+        </header>
+
+        <!-- About Section -->
+        <section id="about" class="animate-on-scroll">
+            <h2 class="section-title">> whoami</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>
+                        Hello! My name is Harsh and I enjoy creating things that live on the internet. My interest in web development started back when I decided to build a custom blog theme — turns out hacking together a custom solution taught me a lot about HTML, CSS & JavaScript!
+                    </p>
+                    <p>
+                        Fast-forward to today, and I’ve had the privilege of working on a variety of projects. My main focus these days is building scalable, performant, and inclusive digital products.
+                    </p>
+                    <p>Here are a few technologies I’ve been working with recently:</p>
+                    <ul class="tech-list">
+                        <li>JavaScript (ES6+)</li>
+                        <li>React & Next.js</li>
+                        <li>Node.js & Express</li>
+                        <li>Python & Django</li>
+                        <li>MongoDB</li>
+                        <li>PostgreSQL</li>
+                    </ul>
+                </div>
+                <div class="about-photo">
+                    <img src="https://via.placeholder.com/300x300.png?text=Your+Photo+Here" alt="A photo of Harsh Kumar Chaurasia">
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="animate-on-scroll">
+            <h2 class="section-title">> ls -R /projects</h2>
+            <div class="project-grid">
+                <!-- Project Card 1 -->
+                <div class="project-card">
+                    <div class="card-header">
+                        <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                        <span class="card-title">[ Project: E-commerce Platform ]</span>
+                    </div>
+                    <div class="card-image">
+                        <a href="#" target="_blank" rel="noopener noreferrer"><img src="https://via.placeholder.com/400x250.png?text=Project+Screenshot+1" alt="E-commerce Platform Screenshot"></a>
+                    </div>
+                    <div class="card-body">
+                        <p class="project-description">A full-featured e-commerce site with product listings, cart functionality, and secure payments via Stripe.</p>
+                        <ul class="project-tech">
+                            <li>React</li>
+                            <li>Node.js</li>
+                            <li>MongoDB</li>
+                            <li>Stripe API</li>
+                        </ul>
+                    </div>
+                    <div class="card-links">
+                        <a href="#" target="_blank" rel="noopener noreferrer">[ View Live > ]</a>
+                        <a href="#" target="_blank" rel="noopener noreferrer">[ Source Code > ]</a>
+                    </div>
+                </div>
+                <!-- Project Card 2 -->
+                <div class="project-card">
+                    <div class="card-header">
+                        <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                        <span class="card-title">[ Project: Real-time Chat App ]</span>
+                    </div>
+                    <div class="card-image">
+                        <a href="#" target="_blank" rel="noopener noreferrer"><img src="https://via.placeholder.com/400x250.png?text=Project+Screenshot+2" alt="Chat App Screenshot"></a>
+                    </div>
+                    <div class="card-body">
+                        <p class="project-description">A responsive, real-time chat application built with WebSockets, allowing instant communication between users.</p>
+                        <ul class="project-tech">
+                            <li>React</li>
+                            <li>Socket.io</li>
+                            <li>Express</li>
+                        </ul>
+                    </div>
+                    <div class="card-links">
+                        <a href="#" target="_blank" rel="noopener noreferrer">[ View Live > ]</a>
+                        <a href="#" target="_blank" rel="noopener noreferrer">[ Source Code > ]</a>
+                    </div>
+                </div>
+                 <!-- Project Card 3 -->
+                 <div class="project-card">
+                    <div class="card-header">
+                        <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                        <span class="card-title">[ Project: This Portfolio! ]</span>
+                    </div>
+                    <div class="card-image">
+                        <a href="#" target="_blank" rel="noopener noreferrer"><img src="https://via.placeholder.com/400x250.png?text=Project+Screenshot+3" alt="Portfolio Screenshot"></a>
+                    </div>
+                    <div class="card-body">
+                        <p class="project-description">A terminal-themed portfolio designed to be responsive, accessible, and showcase my frontend skills.</p>
+                        <ul class="project-tech">
+                            <li>HTML5</li>
+                            <li>CSS3</li>
+                            <li>JavaScript</li>
+                        </ul>
+                    </div>
+                    <div class="card-links">
+                        <a href="#" target="_blank" rel="noopener noreferrer">[ View Live > ]</a>
+                        <a href="#" target="_blank" rel="noopener noreferrer">[ Source Code > ]</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="animate-on-scroll">
+            <h2 class="section-title">> mailto harsh</h2>
+            <div class="contact-box">
+                <h3>What's Next?</h3>
+                <p>
+                    I'm always open to discussing new projects, creative ideas, or opportunities to be part of an ambitious vision. Whether you have a question or just want to say hi, I'll try my best to get back to you!
+                </p>
+                <a href="mailto:hkumarchaurasia@gmail.com" class="cta-button">[ Say Hello ]</a>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer>
+            <div class="footer-socials">
+                 <a href="https://github.com/1harsh12" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                 <a href="https://www.linkedin.com/in/1harsh12/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                 <a href="https://x.com/HKChaurasia0" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+            <p>Designed & Built by Harsh Kumar Chaurasia</p>
+        </footer>
+
+    </main>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="script.js"></script>
+</body>
+</html>
